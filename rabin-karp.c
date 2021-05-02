@@ -2,7 +2,7 @@
 /*
 void inicializar(int m, int n, int q, char* tex, char* pad, Rolling* r)
 {
-    
+
     r = (Rolling*)malloc(sizeof(Rolling));
     r->m = m;
     r->n = n;
@@ -17,39 +17,49 @@ void inicializar(int m, int n, int q, char* tex, char* pad, Rolling* r)
 
 }*/
 
-int procurar(int m, int n, int q, int h, char tex[],char pad[]/*, Rolling* r*/)
+void procurar(int m, int n, int q,/* int h,*/ char tex[],char pad[]/*, Rolling* r*/)
 {
-    //inicializar(m, n, q, tex, pad, r);
-    //printf("h: %d\n", r->h);
     int i=0,
         j=0;
-    int h_pad = hash(m, 0, q, pad);
-    int h_tex = hash(m, 0, q, tex);
 
+    int h_pad = hash(m, 0, q, pad);
+    printf ("hash pad: %d\n", h_pad);
+
+    int h_tex = hash(m, 0, q, tex);
+    printf ("hash tex: %d\n", h_tex);
+
+    int h=pow(D,m-1);
+    h=h%q;
+    /*
+    int h=1;
+    for (i = 0; i < m - 1; i++)
+        h = (h * D) % q;*/
+
+    printf("H: %d\n", h);
     for(i = 0; i <= n-m; i++)
     {
-        
+
         if(h_pad == h_tex)
         {
-            //printf("oi for if\n");
-            //compara um por um
             j = 0;
-            while(j < m && pad[j+i] == tex[j])
+           // printf ("j antes do while: %d\n",j );
+            while(j < m && (tex[j+i] == pad[j]))
             {
                 j++;
-                printf("oi\n");
             }
+           // printf ("j depois do while: %d\n",j );
             if(j == m)
             {
                 printf("te achei, corno, haha! pos: %d\n", i);
             }
         }
+        printf("%d | %d \n", i, (n-m));
         if(i < n-m)
         {
-            printf("oloco\n");
             h_tex = rehash(m, i, q, h_tex, h, tex);
+
+            printf("i: %d rehash: %d\n",i, h_tex);
         }
-        printf("fim do for\n");
     }
 
 }
@@ -57,30 +67,26 @@ int procurar(int m, int n, int q, int h, char tex[],char pad[]/*, Rolling* r*/)
 int hash(int m, int pos, int q, char* texto)
 {
     int hash = 0;
-    
+
     for(int i = pos; i < (pos+m); i++)
     {
-       
-        hash = ((hash*D + texto[i]) % q);
+
+        hash = (hash*D + texto[i])%q;
         //printf("char: %d\n", texto[i]);
-        
     }
-    printf("pos: %d\n", pos);
-    printf("hash: %d\n", hash);
-    printf("\n");
+
     return hash;
 }
 
 int rehash(int m, int pos, int q, int hash, int h, char* texto)
 {
-    printf("rehash\n");
-  
-    int rehash = (((D*(hash)-texto[pos]*h) + texto[pos+m]) % q);
+   // printf("rehash\n");
+    int rehash = (D*((hash)-texto[pos]*h) + texto[pos+m])%q;
     if(rehash < 0)
-        rehash = rehash+q;
+        rehash = (rehash+q);
 
-    printf("pos: %d\n", pos);
+   /* printf("pos: %d\n", pos);
     printf("rehash: %d\n", rehash);
-    printf("\n");
+    printf("\n");*/
     return rehash;
 }
