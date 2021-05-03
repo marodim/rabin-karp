@@ -3,8 +3,8 @@
 int main()
 {
     char txt[MAXCHAR] = "";
-    recebe_de_arquivo(txt, "./teste.txt");
-    percorre_padrao("./padrao.txt", txt);
+    recebe_de_arquivo(txt, "./texto.txt");
+    percorre_padrao("./padrao1.txt", txt);
     
     return 0;
 }
